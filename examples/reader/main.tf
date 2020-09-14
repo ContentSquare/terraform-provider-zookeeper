@@ -18,11 +18,17 @@ resource "zookeeper_node" "bladibla_child" {
 
 
 # Read child znode on path /bladibla/testme2
-data "zookeeper_node" "read_bladibla_chile" {
+data "zookeeper_node" "read_bladibla_child" {
   path = zookeeper_node.bladibla_child.path
 }
 
 # output test data
 output "test_output" {
-  value = jsondecode(data.zookeeper_node.read_bladibla_chile.data.0.data)
+  value = jsondecode(data.zookeeper_node.read_bladibla_child.data.0.data)
+}
+
+
+# output test data
+output "test_output2" {
+  value = data.zookeeper_node.read_bladibla_child
 }
