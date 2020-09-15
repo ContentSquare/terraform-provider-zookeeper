@@ -6,6 +6,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/plugin"
 )
 
+var (
+	version, commit string
+)
 
 func main() {
 	plugin.Serve(&plugin.ServeOpts{
