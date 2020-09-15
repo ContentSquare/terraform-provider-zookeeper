@@ -16,7 +16,7 @@ terraform {
   required_providers {
     zookeeper = {
       
-      source  = "contentsqure/zookeeper"
+      source  = "contentsquare/zookeeper"
       version = "~> 1.0"
     }
   }
