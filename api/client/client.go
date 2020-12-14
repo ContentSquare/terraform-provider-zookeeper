@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/go-zookeeper/zk"
+	"path"
 	"time"
 )
 
@@ -53,14 +54,13 @@ func (c *Client) ReadZNode(path string) (znode ZNode, err error) {
 func (c *Client) DeleteZnode(path string) error {
 	fmt.Println(fmt.Sprintf("[INFO] Deleting znode %v", path))
 	// get version first
-	stat, err := c.GetZnodeStats(path)
+	_, err := c.GetZnodeStats(path)
 	if err != nil {
-		if err.Error() == "zk: node does not exists" {
+		if err == zk.ErrNoNode {
 			return nil
 		}
-		return err
 	}
-	return c.client.Delete(path, stat.Version)
+	return c.recursiveDelete(path)
 }
 
 func (c *Client) GetZnodeStats(path string) (*zk.Stat, error) {
@@ -69,7 +69,7 @@ func (c *Client) GetZnodeStats(path string) (*zk.Stat, error) {
 	return stat, err
 }
 
-func (c *Client) ZnodeExists(path string) (bool,error) {
+func (c *Client) ZnodeExists(path string) (bool, error) {
 	fmt.Println(fmt.Sprintf("[INFO] Checking if znode %v exists", path))
 	exists, _, err := c.client.Exists(path)
 	if err != nil {
@@ -86,4 +86,27 @@ func (c *Client) UpdateZnode(path string, data string) error {
 		return err
 	}
 	return nil
+}
+
+func (c *Client) recursiveDelete(zkPath string) error {
+	children, _, err := c.client.Children(zkPath)
+	if err != nil {
+		fmt.Println(fmt.Sprintf("[ERROR] Error finding children of %s. err=%v", zkPath, err))
+		return err
+	}
+	for _, child := range children {
+		err := c.recursiveDelete(path.Join(zkPath, child))
+		if err != nil && err != zk.ErrNoNode {
+			fmt.Println(fmt.Sprintf("[ERROR] Error removing children of %s. err=%v", zkPath, err))
+			return err
+		}
+	}
+	stat, err := c.GetZnodeStats(zkPath)
+	if err != nil {
+		if err == zk.ErrNoNode {
+			return nil
+		}
+		return err
+	}
+	return c.client.Delete(zkPath, stat.Version)
 }
