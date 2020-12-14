@@ -18,7 +18,7 @@ func TestAccZookeeperNode_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckZookeeperNodeBasicResource("/bladibla", "some nice test data"),
-				Check: testResourceTopic_initialCheck,
+				Check:  testResourceTopic_initialCheck,
 			},
 		},
 	})
@@ -34,11 +34,11 @@ func TestAccZookeeperNode_update(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckZookeeperNodeBasicResource("/bladibla", "some nice test data"),
-				Check: testResourceTopic_initialCheck,
+				Check:  testResourceTopic_initialCheck,
 			},
 			{
 				Config: testAccCheckZookeeperNodeUpdateResource("/bladibla", "new data for tests"),
-				Check: testResourceTopic_updatedcheck,
+				Check:  testResourceTopic_updatedcheck,
 			},
 		},
 	})
@@ -68,6 +68,10 @@ func testAccCheckZookeeperNodeBasicResource(path, data string) string {
 	resource "zookeeper_node" "new" {
 		path = "%s"
 		data = "%s"
+	}
+	resource "zookeeper_node" "child" {
+		path = "${zookeeper_node.new.path}/child1"
+		data = "child_data"
 	}`, path, data)
 }
 

@@ -30,8 +30,8 @@ func resourceZkZnode() *schema.Resource {
 				Required: false,
 			},
 			"zxid": &schema.Schema{
-				Type:             schema.TypeInt,
-				Computed:         true,
+				Type:     schema.TypeInt,
+				Computed: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"zxid": &schema.Schema{
@@ -102,16 +102,3 @@ func resourceZnodeDelete(ctx context.Context, d *schema.ResourceData, m interfac
 	}
 	return diags
 }
-
-//func resourceZnodeExists(ctx context.Context, d *schema.ResourceData, m interface{}) (bool, diag.Diagnostics){
-//	var diags diag.Diagnostics
-//	path := d.Id()
-//	c := m.(*client.Client)
-//	exists,  err := c.ZnodeExists(path)
-//	if err != nil {
-//		return exists, diag.FromErr(err)
-//	}
-//	return exists, diags
-//}
-//
-//
