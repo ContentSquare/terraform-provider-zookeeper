@@ -39,6 +39,7 @@ jobs:
           GOFLAGS: -mod=vendor
         run: |
           go mod download
+          go mod vendor
       - name: Build
         env:
           GO111MODULE: on
@@ -76,6 +77,7 @@ jobs:
           GO111MODULE: on
           GOFLAGS: -mod=vendor
         run: |
+          go mod vendor
           make test
 
       - name: TF acceptance tests
@@ -83,9 +85,11 @@ jobs:
         env:
           TF_ACC_TERRAFORM_VERSION: ${{ matrix.terraform }}
         run: |
+          go mod vendor
           make testacc
       - name: Go VET
         env:
           TF_ACC_TERRAFORM_VERSION: ${{ matrix.terraform }}
         run: |
+          go mod vendor
           make vet
