@@ -7,7 +7,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-
 var testAccProviders map[string]*schema.Provider
 var testAccProviderFactories func(providers *[]*schema.Provider) map[string]func() (*schema.Provider, error)
 var testAccProvider *schema.Provider
@@ -32,7 +31,7 @@ func TestProvider_impl(t *testing.T) {
 
 func testAccPreCheck(t *testing.T) {
 	if err := os.Getenv("ZOOKEEPER_HOST"); err == "" {
-		t.Fatal("ZOOKEEPER_HOST must be set for accqeptance tests")
+		t.Fatal("ZOOKEEPER_HOST must be set for acceptance tests")
 	}
 	if err := os.Getenv("ZOOKEEPER_PORT"); err == "" {
 		t.Fatal("ZOOKEEPER_PORT must be set for acceptance tests")
